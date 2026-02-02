@@ -1,0 +1,12 @@
+name: Required Workflow (Cross-Repo)
+
+on:
+  workflow_call:
+  pull_request:
+
+jobs:
+  required-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pass
+        run: echo "Required workflow from env0/mergeability-test-workflows passed"
