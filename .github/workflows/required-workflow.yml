@@ -3,10 +3,21 @@ name: Required Workflow (Cross-Repo)
 on:
   workflow_call:
   pull_request:
+    types: [opened, synchronize, labeled, unlabeled]
 
 jobs:
   required-check:
     runs-on: ubuntu-latest
     steps:
+      - name: Check for fail label
+        if: contains(github.event.pull_request.labels.*.name, 'fail-required-workflow')
+        run: |
+          echo "Failing due to 'fail-required-workflow' label"
+          exit 1
+      - name: Check for pending label
+        if: contains(github.event.pull_request.labels.*.name, 'pending-required-workflow')
+        run: |
+          echo "Staying pending due to 'pending-required-workflow' label"
+          sleep 3600
       - name: Pass
         run: echo "Required workflow from env0/mergeability-test-workflows passed"
