@@ -6,7 +6,22 @@ on:
     types: [opened, synchronize, labeled, unlabeled]
 
 jobs:
+  # Shared delay gate - when 'delay-checks' label is present, sleeps ~30s so that
+  # dependent jobs' CheckRuns are created later (pushing them to page 2+ in GraphQL pagination)
+  delay-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delay if label present
+        if: contains(github.event.pull_request.labels.*.name, 'delay-checks')
+        run: |
+          echo "Delaying ~30 seconds due to 'delay-checks' label"
+          sleep 30
+      - name: No delay
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'delay-checks') }}
+        run: echo "No delay label, proceeding immediately"
+
   required-check:
+    needs: [delay-gate]
     runs-on: ubuntu-latest
     steps:
       - name: Check for fail label
