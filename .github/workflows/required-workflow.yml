@@ -5,6 +5,8 @@ on:
   pull_request:
     types: [opened, synchronize, labeled, unlabeled]
 
+permissions: {}
+
 jobs:
   # Shared delay gate - when 'delay-checks' label is present, sleeps ~30s so that
   # dependent jobs' CheckRuns are created later (pushing them to page 2+ in GraphQL pagination)
